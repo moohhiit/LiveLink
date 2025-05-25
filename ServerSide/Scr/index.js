@@ -1,12 +1,13 @@
 import express from "express"
 
 const app = express()
+PORT = 3001
 
+app.use(express.json())
 
 app.get('/' , (req, res)=>{
     console.log("Message Recive ")
 })
-
 
 
 

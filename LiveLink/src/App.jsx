@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ContactList from './component/ContactList';
 import ChatScreen from './component/ChatScreen';
+import AuthPage from './Auth/AuthPage';
 
 
 const contactsData = [
@@ -12,8 +13,15 @@ const contactsData = [
 
 function App() {
   const [selectedContact, setSelectedContact] = useState(null);
+  const [user, setUser] = useState(null);
   const [chats, setChats] = useState({});
- const [mode, setMode] = useState('private');
+  const [mode, setMode] = useState('private');
+
+
+  if (!user) {
+    return <AuthPage onAuthSuccess={setUser} />
+  }
+
   const handleSendMessage = (text) => {
     if (!selectedContact) return;
 
@@ -30,9 +38,9 @@ function App() {
   };
 
   return (
-  <div className="h-screen w-screen bg-gray flex items-center justify-center">
+    <div className="h-screen w-screen bg-gray flex items-center justify-center">
       <div className="w-full max-w-5xl h-[90vh] md:h-[70vh] bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden text-black">
-          <ContactList
+        <ContactList
           contacts={contactsData}
           onSelect={setSelectedContact}
           selectedId={selectedContact?.id}
