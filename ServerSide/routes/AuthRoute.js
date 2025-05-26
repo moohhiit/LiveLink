@@ -1,0 +1,41 @@
+import express from "express"
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+import UserModel from "../models/User.js";
+
+const route = express.Router();
+
+dotenv.config()
+
+
+
+
+route.post('/signup' , async (req , res)=>{
+    const {email , password } = req.body;
+
+    try{
+        const user = new UserModel({
+            email , password
+        })
+
+        await user.save();
+        const token = jwt.sign({email} , process.env.JWT_SECRET)
+        res.json({token , email})
+
+    }catch(e){
+        res.status(400).json({error :  "User already exist "})
+    }
+})
+
+route.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await UserModel.findOne({ email });
+  if (!user || !(await user.comparePassword(password))) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+  const token = jwt.sign({ email }, process.env.JWT_SECRET);
+  res.json({ token, email });
+})
+
+
+export default route
