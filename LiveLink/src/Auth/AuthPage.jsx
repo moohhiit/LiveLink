@@ -1,18 +1,56 @@
-
 import React, { useState } from 'react';
+import axios from "axios"
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const AuthPage = ({ onAuthSuccess }) => {
-  const [mode, setMode] = useState('login'); // 'login' or 'signup'
+  const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setname] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Mock authentication
-    if (email && password) {
-      onAuthSuccess(email); 
+  // const navigate = useNavigate()
+  const API = axios.create({
+    baseURL: 'http://localhost:5001/api'
+  })
+
+  const Login = (e, p) => {
+
+    API.post('/auth/login', { email: e, password: p }).then((r) => {
+     const {token , name } = r.data;
+     localStorage.setItem('token' , token)
+     onAuthSuccess(name)
+    })
+
+  }
+  const Signup = (e, p, n) => {
+   
+    API.post('/auth/signup', { email: e, password: p, name: n }).then((result) => {
+      const {token , name } = result.data
+      localStorage.setItem('token' , token)
+      onAuthSuccess(name)
+    })
     }
-  };
+
+
+  const handleLogin = (e)=>{
+    e.preventDefault()
+    Login(email , password)
+  }
+  
+  const handleSignup = (e) => {
+    e.preventDefault();
+   
+    Signup(email, password, name)
+    
+  }
+
+//  useEffect(()=>{
+//   const token = localStorage.getItem('token')
+//     if(token){
+//       navigate('/chat')
+//     }
+//  },[])
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
@@ -21,7 +59,7 @@ const AuthPage = ({ onAuthSuccess }) => {
           {mode === 'login' ? 'Login' : 'Sign Up'}
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={mode == 'login' ? handleLogin : handleSignup} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
@@ -30,6 +68,17 @@ const AuthPage = ({ onAuthSuccess }) => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          {
+            mode != "login" ?
+              <input
+                type="test"
+                placeholder="Name"
+                className="w-full p-2 border rounded"
+                value={name}
+                onChange={(e) => setname(e.target.value)}
+                required
+              /> : null
+          }
           <input
             type="password"
             placeholder="Password"

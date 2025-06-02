@@ -11,16 +11,16 @@ dotenv.config()
 
 
 route.post('/signup' , async (req , res)=>{
-    const {email , password } = req.body;
+    const {email , password , name } = req.body;
 
     try{
         const user = new UserModel({
-            email , password
+            email , password , userName : name 
         })
 
         await user.save();
         const token = jwt.sign({email} , process.env.JWT_SECRET)
-        res.json({token , email})
+        res.json({token , name})
 
     }catch(e){
         res.status(400).json({error :  "User already exist "})
@@ -30,11 +30,12 @@ route.post('/signup' , async (req , res)=>{
 route.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email });
+  const name = user.userName
   if (!user || !(await user.comparePassword(password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
   const token = jwt.sign({ email }, process.env.JWT_SECRET);
-  res.json({ token, email });
+  res.json({ token, name });
 })
 
 
