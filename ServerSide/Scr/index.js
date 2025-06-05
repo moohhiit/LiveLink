@@ -29,7 +29,16 @@ app.use(cors())
 
 io.on('connection', (socket) => {
   console.log('client connected:', socket.id);
-
+  socket.on('get-all-users', async () => {
+    const sockets = await io.fetchSockets();
+    const allUsers = sockets.map(s => ({
+      id: s.id,
+      username: s.handshake.auth?.userName || "Guest"
+    }))
+    console.log(allUsers)
+    socket.emit('all-user' , allUsers)  
+  
+  })
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
   });

@@ -19,7 +19,7 @@ route.post('/signup' , async (req , res)=>{
         })
 
         await user.save();
-        const token = jwt.sign({email} , process.env.JWT_SECRET)
+        const token = jwt.sign({email:email ,Name: name } , process.env.JWT_SECRET , {expiresIn:'1h'})
         res.json({token , name})
 
     }catch(e){
@@ -28,13 +28,15 @@ route.post('/signup' , async (req , res)=>{
 })
 
 route.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password
+
+   } = req.body;
   const user = await UserModel.findOne({ email });
   const name = user.userName
   if (!user || !(await user.comparePassword(password))) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
-  const token = jwt.sign({ email }, process.env.JWT_SECRET);
+  const token = jwt.sign({ email: email  , Name : name}, process.env.JWT_SECRET , {expiresIn:'1h'});
   res.json({ token, name });
 })
 

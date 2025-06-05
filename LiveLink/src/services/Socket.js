@@ -1,6 +1,15 @@
-import {io} from "socket.io-client"
-
-const socket = io('http://localhost:5001')
+import { io } from "socket.io-client"
 
 
-export default socket
+ function CreateSocket(uN){
+
+   
+    const socket = io('http://localhost:5001', {
+        auth: {
+            userName: uN
+        }
+    })
+}
+
+
+export default CreateSocket

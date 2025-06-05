@@ -2,55 +2,29 @@ import React, { useState } from 'react';
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useAuth } from '../Context/AuthContext';
 
-const AuthPage = ({ onAuthSuccess }) => {
+const AuthPage = () => {
   const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setname] = useState('')
 
-  // const navigate = useNavigate()
-  const API = axios.create({
-    baseURL: 'http://localhost:5001/api'
-  })
+  const { userName, login, Signup } = useAuth()
+  const navigate = useNavigate()
 
-  const Login = (e, p) => {
-
-    API.post('/auth/login', { email: e, password: p }).then((r) => {
-     const {token , name } = r.data;
-     localStorage.setItem('token' , token)
-     onAuthSuccess(name)
-    })
-
-  }
-  const Signup = (e, p, n) => {
-   
-    API.post('/auth/signup', { email: e, password: p, name: n }).then((result) => {
-      const {token , name } = result.data
-      localStorage.setItem('token' , token)
-      onAuthSuccess(name)
-    })
-    }
-
-
-  const handleLogin = (e)=>{
+  const handleLogin = (e) => {
     e.preventDefault()
-    Login(email , password)
+    login(email, password)
+    navigate('/')
   }
-  
+
   const handleSignup = (e) => {
     e.preventDefault();
-   
-    Signup(email, password, name)
-    
-  }
 
-//  useEffect(()=>{
-//   const token = localStorage.getItem('token')
-//     if(token){
-//       navigate('/chat')
-//     }
-//  },[])
+    Signup(email, password, name)
+    navigate('/')
+  }
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
