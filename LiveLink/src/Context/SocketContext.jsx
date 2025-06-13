@@ -7,30 +7,40 @@ const SocketContext = createContext()
 export function SocketProvider({ children }) {
   const { userName } = useAuth()
   const [socket, setsocket] = useState(null)
-
+  const [socketId, setSocketId] = useState(null)
+  const [userList, setuserList] = useState([])
+  const [onlineUserList , setOnlineUsers]= useState([])
   useEffect(() => {
     if (!userName) return
 
-    const newSocket  = io('http://localhost:5001', {
+    const newSocket = io('http://localhost:5001', {
       auth: {
         userName: userName,
       },
     })
-    setsocket(newSocket)
 
+    newSocket.emit("register-user", userName);
+    newSocket.on("update-users", (users) => {
+      setOnlineUsers(users);
+    });
+
+    setsocket(newSocket)
+    setSocketId(newSocket.id)
     newSocket.on('connect', () => {
       console.log('Socket connected:', newSocket.id)
+
     })
 
     return () => {
       newSocket.disconnect()
+      newSocket.off("update-users");
       setsocket(null)
-    
+
     }
   }, [userName])
 
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider value={{ socket, socketId , onlineUserList }}>
       {children}
     </SocketContext.Provider>
   )

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 
 
@@ -19,7 +19,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem('token', token)
       setuserName(name)
       
-
     })
   }
 
@@ -33,6 +32,10 @@ export function AuthProvider({ children }) {
 
   const logout = () => setUser(null)
 
+  useEffect(() => {
+    const stored = localStorage.getItem('userName');
+    if (stored) setuserName(stored);
+  }, []);
   return (
     <AuthContext.Provider value={{ userName, login, Signup, logout }}>
       {children}

@@ -25,7 +25,11 @@ const AuthPage = () => {
     Signup(email, password, name)
     navigate('/')
   }
-
+  useEffect(() => {
+    if (userName) {
+      navigate('/');
+    }
+  }, [userName, navigate]);
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-sm text-black">
