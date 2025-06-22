@@ -32,11 +32,33 @@ io.on('connection', (socket) => {
   console.log('client connected:', socket.id);
 
 
-
   socket.on("register-user", (username) => {
-   let  userdata = { id: socket.id, username: username }
+    let userdata = { id: socket.id, username: username }
     connectedUsers.push(userdata)
     io.emit("update-users", connectedUsers);
+  });
+
+  socket.on('private_message', ({ senderId, receiverId, message }) => {
+    console.log("Message Recive" , senderId , receiverId , message)
+    // const receiverSocketId = users[receiverId];
+    // if (receiverSocketId) {
+    //   io.to(receiverSocketId).emit('private_message', {
+    //     senderId,
+    //     message,
+    //     seen: false,
+    //     timestamp: Date.now(),
+    //   });
+    // }
+  });
+
+  socket.on('message_seen', ({ senderId }) => {
+    const senderSocketId = users[senderId];
+    if (senderSocketId) {
+      io.to(senderSocketId).emit('message_seen_ack', {
+        seen: true,
+        timestamp: Date.now(),
+      });
+    }
   });
 
   socket.on('disconnect', () => {

@@ -3,7 +3,7 @@ import { useSocket } from '../Context/SocketContext';
 import { useEffect } from 'react';
 
 const ContactList = ({ privateList, contacts, onSelect, selectedId, mode, setMode }) => {
-
+    const { socketId } = useSocket()
     useEffect(() => {
         console.log(privateList)
     })
@@ -40,18 +40,25 @@ const ContactList = ({ privateList, contacts, onSelect, selectedId, mode, setMod
 
                     </div> :
                         <>
-                            {privateList.map((contact) => (
+                            {privateList.map((contact) => {
 
-                                <li
-                                    key={contact.id}
-                                    onClick={() => onSelect(contact)}
-                                    className={`p-2 flex items-center gap-3 cursor-pointer rounded hover:bg-gray-200 ${selectedId === contact.id ? 'bg-gray-300' : ''
-                                        }`}
-                                >
+                                return (
 
-                                    <span className="text-left">{contact.username} <span className='text-xs text-gray-800' >{`#${contact.id}`}</span> </span>
-                                </li>
-                            ))}
+                                    contact.id !== socketId ?
+
+                                        <li
+                                            key={contact.id}
+                                            onClick={() => onSelect(contact)}
+                                            className={`p-2 flex items-center gap-3 cursor-pointer rounded hover:bg-gray-200 ${selectedId === contact.id ? 'bg-gray-300' : ''
+                                                }`}
+                                        >
+
+                                            <span className="text-left">{contact.username} <span className='text-xs text-gray-800' >{`#${contact.id}`}</span> </span>
+                                        </li>
+                                        : null
+                                )
+                            }
+                            )}
 
                         </>
                 }

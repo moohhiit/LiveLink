@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './Context/AuthContext.jsx'
 import { SocketProvider } from './Context/SocketContext.jsx'
+import { MessgaeProvider } from './Context/MessageContext.jsx'
 
 
 createRoot(document.getElementById('root')).render(
@@ -12,7 +13,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AuthProvider>
         <SocketProvider>
+          <MessgaeProvider>
           <App />
+          </MessgaeProvider>
         </SocketProvider>
       </AuthProvider>
     </BrowserRouter>

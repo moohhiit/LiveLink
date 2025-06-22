@@ -24,9 +24,10 @@ export function SocketProvider({ children }) {
       setOnlineUsers(users);
     });
 
-    setsocket(newSocket)
-    setSocketId(newSocket.id)
+    
     newSocket.on('connect', () => {
+      setsocket(newSocket)
+      setSocketId(newSocket.id)
       console.log('Socket connected:', newSocket.id)
 
     })
@@ -34,7 +35,7 @@ export function SocketProvider({ children }) {
     return () => {
       newSocket.disconnect()
       newSocket.off("update-users");
-      setsocket(null)
+      
 
     }
   }, [userName])

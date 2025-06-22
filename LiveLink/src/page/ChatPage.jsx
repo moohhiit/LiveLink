@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ContactList from '../component/ContactList';
 import ChatScreen from '../component/ChatScreen';
 import { useSocket } from '../Context/SocketContext';
+import { useMessage } from '../Context/MessageContext';
 
 export default function ChatPage() {
     const [selectedContact, setSelectedContact] = useState(null);
@@ -10,12 +11,14 @@ export default function ChatPage() {
     const [chats, setChats] = useState({});
     const [mode, setMode] = useState('private');
    
-
+    const {sendPrivateMessage} = useMessage()
     const { socket , socketId , onlineUserList } = useSocket()
 
 
     const handleSendMessage = (text) => {
         if (!selectedContact) return;
+        sendPrivateMessage(socketId , selectedContact.id , text)
+       
 
         const newMessage = {
             id: Date.now(),

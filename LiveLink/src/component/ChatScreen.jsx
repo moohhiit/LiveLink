@@ -13,7 +13,7 @@ const ChatScreen = ({ contact, messages, onSend }) => {
     return (
         <div className="w-full md:w-2/3 flex flex-col p-4 text-black">
             <h2 className="text-2xl font-semibold mb-4 text-center">
-                Chat with {contact.name}
+                Chat with {contact.username}
             </h2>
             <div className="flex-1 overflow-y-auto space-y-3 mb-4 px-2 scrollbar-hidden" id="chat-scroll">
                 {messages.map((msg) => (
